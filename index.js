@@ -115,7 +115,36 @@ function viewDataUpdate(matricula,nombre,edad,promedio,sexo,key){
     update.disabled = false;
 }
 
+var reference = db.ref('task/');   x=0;
+y=0;
+prom=0;
 var reference = db.ref('task/');    
+reference.on('value',function(datas){
+    var data = datas.val();
+    $.each(data, function(nodo, value) {
+            var sendData = table(value.matricula,value.nombre,value.edad,value.promedio,value.sexo,nodo);
+            if(value.sexo=="mujer"){                                
+                printHTML('tablaM',sendData);                
+            }else if(value.sexo=="hombre"){
+                printHTML('tablaH',sendData);
+            }
+            x++;
+            if(isNaN(parseInt(data))){
+                y++;
+            }
+            prom+=parseInt(value.promedio);
+    });
+    if(x==y){
+        prom=prom/x;
+        printHTML("promGral",prom);
+        
+        printHTML("aux",x);
+        //alert("Num"+x+"Promedio"+ prom);
+        x=0;
+        y=0;
+        prom=0;  
+    }       
+}); 
 reference.on('value',function(datas){
     var data = datas.val();
     $.each(data, function(nodo, value) {
